@@ -176,8 +176,6 @@ void loop() {
          nine();
         
         tick++;
-  
-  
     }
   
 }

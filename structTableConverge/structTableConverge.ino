@@ -14,6 +14,7 @@
 #define SignalB 21 //GPIO21
 #define pushButton1 23 //GPIO23
 #define analogPot 22 //GPIO22
+#define LEDerrorCode 25
 
 #define squareWave 19 //GPIO22
 
@@ -28,10 +29,13 @@ void setup() {
   // put your setup code here, to run once:
   
   pinMode(SignalB, OUTPUT); //signalB from 21
-
+  pinMode(LEDerrorCode, OUTPUT);
+  
   pinMode(pushButton1, INPUT); //disable stream pulse button
   pinMode(analogPot, INPUT); //mode selection button
   pinMode(squareWave, INPUT);
+  
+  
   
 
 
@@ -58,14 +62,16 @@ Serial.println("task1");
     digitalWrite(SignalB,LOW);
 }
 
+int digitalSwitchState=0;
 void two(){
   
  Serial.println("task2");
-     digitalRead(SignalB);
+     digitalSwitchState=digitalRead(SignalB);
 
   
 }
 
+int oscilloscopeFrequency;
 void three(){
   Serial.println("task3");
   boolean found=false;
@@ -74,7 +80,10 @@ void three(){
   long unsigned int mark1;
   long unsigned int mark2;
   long unsigned int onTime;
+  
   while(!found){
+    Serial.println("task3 Finding");
+    
     squareReading=digitalRead(squareWave);
       if(squareReading) {
         if(!start){
@@ -94,7 +103,7 @@ void three(){
      
   }
   onTime=mark2-mark1;
-  
+  oscilloscopeFrequency=1/onTime;
 }
 
 float arrayValue[]={0,0,0,0};
@@ -106,34 +115,78 @@ void four(){
 //  arrayValueV2[2:4]=arrayValue[1:3];
   }
 
-
+int global_average=0;
 void five(){
   Serial.println("task5");
-  int average=0;
+  int local_average=0;
   for(int i=0; i<4;i++){
     Serial.println("task 5 Iteration: ");
     Serial.println(i);
-    average=arrayValue[i];
+    global_average=arrayValue[i];
   }
   
-  average=average/4;
+  local_average=local_average/4;
+  global_average=local_average;
 }
+
 void six(){
   Serial.println("task6");
-  
+  for(int i=0; i<1000; i++){
+    __asm__ __volatile__ ("nop");
+  }
 }
+
+int error_code=0;
+
 void seven(){
+  
   Serial.println("task7");
+  if(global_average > (3.3/2)){
+    error_code=1;
+    }else{
+      error_code=0;
+    }
+    
 }
 void eight(){
   Serial.println("task8");
+  digitalWrite(LEDerrorCode,HIGH);
 }
+
+char buffer[7];
+char dataStr[100] = "";
+
 void nine(){
+  //need to store:
+  //state of the digital input (switch)
+  //frequency value (Hz as integer)
+  //filtered analog input (average reading)
+  
   Serial.println("task9");
+
+    dataStr[0]=0;
+    
+  dtostrf (digitalSwitchState, 5, 2, buffer);  //5 is minimum width, 1 is precision; float value is copied onto buff
+ strcat( dataStr, buffer); //append the converted float
+ strcat( dataStr, ", "); //append the delimiter
+//
+// dtostrf(oscilloscopeFrequency, 5, 2, buffer);  //5 is minimum width, 1 is precision; float value is copied onto buff
+// strcat( dataStr, buffer); //append the converted float
+// strcat( dataStr, ", "); //append the delimiter
+//
+// dtostrf(global_average, 5, 2, buffer);  //5 is minimum width, 1 is precision; float value is copied onto buff
+// strcat( dataStr, buffer); //append the converted float
+// strcat( dataStr, 0); //terminate correctly 
+// Serial.println(dataStr);
+ 
+  
 }
+
+int tick=0;
 
 void burn(){
 Serial.println("burning time");
+    tick++;
     
 }
 
@@ -171,26 +224,43 @@ struct TASKTIMER{
   //  {burn,burn,burn,burn,burn}};
   
 
+
 void loop() {
   // put your main code here, to run repeatedly:
-  unsigned long currentTime= millis();
-  int tick=0;
-
+  unsigned long currentTime;
+   unsigned long mark1;
+    unsigned long mark2;
 
    boolean testingVariable;
   //for(int slot=0; slot<SLOTX; slot++){
-
+    int counter=1;
+    delay(1000);
     for(auto &taskTimer: TaskTimers){
-        testingVariable=(currentTime/taskTimer.period)%2;
+      testingVariable=1;
+      Serial.println("testing");
+      Serial.println(counter);
+      
+      while(testingVariable !=0){
+        
+        
+        currentTime= millis();
+        testingVariable=(currentTime/taskTimer.period)%9;
         Serial.println(testingVariable);
-        if (testingVariable){
+        if (testingVariable ==0){
+          
+       mark1= millis();
         //(*mypointer[slot])();
         taskTimer.task();
-        delay(1000);
+        mark2 = millis();
+        float computeTime=mark2-mark1;
+        Serial.println("task:");
+        Serial.println(counter);
+        Serial.println(computeTime);
+        counter++;
         }else{
           burn();
         }
-  
+      }
   
     }
 
