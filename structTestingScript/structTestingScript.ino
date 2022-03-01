@@ -19,19 +19,7 @@
 //specialfunc *mypointer(double,int);
 
 
-struct TASKTIMER{
-  
-}TaskTimers[]{
-  {one},
-  {two},
-  {three},
-  {four},
-  {five},
-  {six},
-  {seven},
-  {eight},
-  {nine}
-}
+
 void setup() {
   Serial.begin(9600);
   
@@ -41,14 +29,7 @@ void setup() {
 
   pinMode(pushButton1, INPUT); //disable stream pulse button
   pinMode(analogPot, INPUT); //mode selection button
-
-  
-
-
 }
-
-
-
 
 
 //void (*ttable[SLOTX][CYCLEX])(void)={
@@ -107,6 +88,23 @@ void (*mypointer[])(void)={
   four,
   five
           };
+
+
+struct TASKTIMER{
+  void (*task)();
+  unsigned long period;
+} TaskTimers[]{
+  {one,5},
+  {two,200},
+  {three,1000},
+  {four,41},
+  {five,41},
+  {six,100},
+  {seven,333},
+  {eight,333},
+  {nine,5000}
+};
+
                           
 //void (*mypointer[][])(void)(void)={
   // {one,two,three,four,five},
@@ -117,12 +115,19 @@ void (*mypointer[])(void)={
 void loop() {
   // put your main code here, to run repeatedly:
   unsigned long currentTime= millis();
+  boolean testingVariable;
+  //for(int slot=0; slot<SLOTX; slot++){
 
-  for(int slot=0; slot<SLOTX; slot++){
-    
-        (*mypointer[slot])();
+    for(auto &taskTimer: TaskTimers){
+        testingVariable=(currentTime/taskTimer.period)%2;
+        Serial.println(testingVariable);
+        if (testingVariable){
+        //(*mypointer[slot])();
+        taskTimer.task();
         delay(1000);
-      
+        }else{
+          burn();
+        }
   
   
     }

@@ -4,7 +4,7 @@
 //#include <ctype.h>
 
 //#include <sys/times.h>
-
+//#include <SoftwareSerial.h>
 
 #define SLOTX 4
 #define CYCLEX 5
@@ -14,6 +14,9 @@
 #define SignalB 21 //GPIO21
 #define pushButton1 23 //GPIO23
 #define analogPot 22 //GPIO22
+
+#define squareWave 19 //GPIO22
+
 
 //typedef char specialfunc();
 //specialfunc *mypointer(double,int);
@@ -28,7 +31,7 @@ void setup() {
 
   pinMode(pushButton1, INPUT); //disable stream pulse button
   pinMode(analogPot, INPUT); //mode selection button
-
+  pinMode(squareWave, INPUT);
   
 
 
@@ -50,26 +53,74 @@ void setup() {
 //void five(void);
 void one(){
 Serial.println("task1");
-    
+    digitalWrite(SignalB,HIGH);
+    delayMicroseconds(50);
+    digitalWrite(SignalB,LOW);
 }
 
 void two(){
   
  Serial.println("task2");
+     digitalRead(SignalB);
+
   
 }
 
 void three(){
   Serial.println("task3");
+  boolean found=false;
+  boolean start = false;
+  int squareReading;
+  long unsigned int mark1;
+  long unsigned int mark2;
+  long unsigned int onTime;
+  while(!found){
+    squareReading=digitalRead(squareWave);
+      if(squareReading) {
+        if(!start){
+        mark1=millis();
+        start=true;
+        }
+        else{
+        delay(40); // taken from the minimum of 2.5%
+      }
+      }else{
+        if(start){
+          mark2=millis();
+          found = true;
+        }
+      }
+      
+     
+  }
+  onTime=mark2-mark1;
+  
 }
+
+float arrayValue[]={0,0,0,0};
 void four(){
   Serial.println("task4");
-}
+  float potValue;
+  potValue=analogRead(analogPot);
+  float arrayValueV2[]={0,0,0,0};
+//  arrayValueV2[2:4]=arrayValue[1:3];
+  }
+
+
 void five(){
   Serial.println("task5");
+  int average=0;
+  for(int i=0; i<4;i++){
+    Serial.println("task 5 Iteration: ");
+    Serial.println(i);
+    average=arrayValue[i];
+  }
+  
+  average=average/4;
 }
 void six(){
   Serial.println("task6");
+  
 }
 void seven(){
   Serial.println("task7");
@@ -92,7 +143,11 @@ void (*mypointer[])(void)={
   two,
   three,
   four,
-  five
+  five,
+  six,
+  seven,
+  eight,
+  nine
           };
                           
 //void (*mypointer[][])(void)(void)={
@@ -107,8 +162,19 @@ void loop() {
   int tick=0;
   for(int slot=0; slot<SLOTX; slot++){
 
-        if tick/        (*mypointer[slot])();
-        delay(1000);
+//       if ( *mypointer[slot]()){
+//          
+//       }
+         one();
+         two();
+         three();
+         four();
+         five();
+         six();
+         seven();
+         eight();
+         nine();
+        
         tick++;
   
   
