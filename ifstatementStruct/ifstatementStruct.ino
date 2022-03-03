@@ -76,47 +76,34 @@ void three(){
   Serial.println("task3");
   boolean found=false;
   boolean start = false;
-  int squareReading=0;
+  int squareReading;
   long unsigned int mark1;
   long unsigned int mark2;
- 
-
-  while(!squareReading){
-    squareReading=digitalRead(squareWave);
-  }
-  mark1=millis();
-  while(squareReading){
-    squareReading=digitalRead(squareWave);
-  }
-  mark2=millis();
-//  while(!found){
-//    Serial.println("task3 Finding");
-//    
-//    squareReading=digitalRead(squareWave);
-//    
-//      if(squareReading=1) {
-//        if(!start){
-//        mark1=millis();
-//        start=true;
-//        }
-//        else{
-//        delay(40); // taken from the minimum of 2.5%
-//      }
-//      }else{
-//        if(start){
-//          mark2=millis();
-//          found = true;
-//        }
-//      }
-//      
-//     
-//  }
-  float onTime=mark2-mark1;
-  Serial.println(onTime);
-  oscilloscopeFrequency=1/onTime;
-  Serial.println("frequency is: ");
-  Serial.println(oscilloscopeFrequency*2);
+  long unsigned int onTime;
   
+  while(!found){
+    Serial.println("task3 Finding");
+    
+    squareReading=digitalRead(squareWave);
+      if(squareReading) {
+        if(!start){
+        mark1=millis();
+        start=true;
+        }
+        else{
+        delay(40); // taken from the minimum of 2.5%
+      }
+      }else{
+        if(start){
+          mark2=millis();
+          found = true;
+        }
+      }
+      
+     
+  }
+  onTime=mark2-mark1;
+  oscilloscopeFrequency=1/onTime;
 }
 
 float arrayValue[]={0,0,0,0};
