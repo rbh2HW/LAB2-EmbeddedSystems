@@ -81,14 +81,15 @@ void three(){
   long unsigned int mark2;
  
 
-  while(!squareReading){
-    squareReading=digitalRead(squareWave);
-  }
-  mark1=millis();
-  while(squareReading){
-    squareReading=digitalRead(squareWave);
-  }
-  mark2=millis();
+   
+//  while(!squareReading){
+//    squareReading=digitalRead(squareWave);
+//  }
+//  mark1=millis();
+//  while(squareReading){
+//    squareReading=digitalRead(squareWave);
+//  }
+//  mark2=millis();
 //  while(!found){
 //    Serial.println("task3 Finding");
 //    
@@ -111,11 +112,23 @@ void three(){
 //      
 //     
 //  }
-  float onTime=mark2-mark1;
-  Serial.println(onTime);
-  oscilloscopeFrequency=1/onTime;
-  Serial.println("frequency is: ");
-  Serial.println(oscilloscopeFrequency*2);
+
+   mark1 = pulseIn(squareWave,HIGH);
+   mark2 = pulseIn(squareWave,LOW);
+   float period = mark1+mark2; //is in microseconds
+   float freq=1e6/period; //dividing by 1e6 as this is 1micro in second as you need to scale it
+//   float freq=period;
+   
+   oscilloscopeFrequency = 1/period;
+   
+//  float onTime=mark2-mark1;
+  
+//  oscilloscopeFrequency=1/onTime;
+  Serial.println(period);
+  Serial.println("oscfrequency is: ");
+  Serial.println(oscilloscopeFrequency);
+    Serial.println("frequency is: ");
+  Serial.println(freq);
   
 }
 
