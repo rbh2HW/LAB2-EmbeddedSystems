@@ -75,7 +75,7 @@ void two() {
 
 }
 
-int oscilloscopeFrequency=0;
+int oscilloscopeFrequency = 0;
 void three() {
   //  Serial.println("task3");
   //  boolean found = false;
@@ -252,8 +252,8 @@ unsigned long tick = 1;
 
 void burn() {
   //  Serial.println("burning time");
-  //  delayMicroseconds(1);
-  tick++;
+  delayMicroseconds(900);
+//  tick++;
 
 }
 
@@ -274,15 +274,15 @@ struct TASKTIMER {
   void (*task)();
   unsigned long period;
 } TaskTimers[] {
-  {one, 16000},
-  {two, 200000},
-  {three, 1000000},
-  {four, 42000},
-  {five, 42000},
-  {six, 100000},
-  {seven, 333000},
-  {eight, 333000},
-  {nine, 5000000}
+  {one, 16},
+  {two, 200},
+  {three, 1000},
+  {four, 42},
+  {five, 42},
+  {six, 100},
+  {seven, 333},
+  {eight, 333},
+  {nine, 5000}
 };
 
 //void (*mypointer[][])(void)(void)={
@@ -291,30 +291,32 @@ struct TASKTIMER {
 //  {burn,burn,burn,burn,burn}};
 
 
-unsigned long currentTime=0;
+unsigned long beforemillis = 0;
 void loop() {
   // put your main code here, to run repeatedly:
-  
+  unsigned long currentTime;
   float mark1;
   float mark2;
 
   boolean testingVariable = false;
   //for(int slot=0; slot<SLOTX; slot++){
   //    int counter=1;
-//  tick = micros();
+  tick = millis();
+  while (beforemillis == tick) {
+    tick = millis();
+  }
+  beforemillis=tick;
   //  mark1 = micros();
-//  for (int i = tick; i < tick + 16000; i++) {
-
-    currentTime++;
+  for (int i = tick; i < (tick + 16); i++) {
     for (auto &taskTimer : TaskTimers) {
 
 
 
       //    one();
-      int ifstatementCondition=0;
-       ifstatementCondition=taskTimer.period+(0.5*taskTimer.period);
+
+
       //
-      if (((currentTime % ifstatementCondition) == 0.0) ) {
+      if (((i % taskTimer.period) == 0.0) ) {
         testingVariable = true;
         //        mark1 = micros();
         //    seven();
@@ -351,8 +353,8 @@ void loop() {
     }
 
     if (!testingVariable) {
-      //      burn();
-      currentTime++;
+      burn();
+      i++;
     }
   }
   //
@@ -360,7 +362,7 @@ void loop() {
 
   //  Serial.println(mark2 - mark1);
 
-//}
+}
 
 
 
