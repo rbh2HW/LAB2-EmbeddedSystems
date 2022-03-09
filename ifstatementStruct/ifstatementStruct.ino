@@ -11,7 +11,7 @@
 #define SLOT_T 5000
 
 
-#define SignalB 21 //GPIO21
+#define SignalB 16 //GPIO21
 #define pushButton1 23 //GPIO23
 #define analogPot 22 //GPIO22
 #define LEDerrorCode 25
@@ -59,14 +59,16 @@ void one(){
 Serial.println("task1");
     digitalWrite(SignalB,HIGH);
     delayMicroseconds(50);
+//      delay(50);
     digitalWrite(SignalB,LOW);
+//     delay(50);
 }
 
 int digitalSwitchState=0;
 void two(){
   
  Serial.println("task2");
-     digitalSwitchState=digitalRead(SignalB);
+     digitalSwitchState=digitalRead(pushButton1);
 
   
 }
@@ -103,7 +105,7 @@ void three(){
 //        else{
 //        delay(40); // taken from the minimum of 2.5%
 //      }
-//      }else{
+//      }else{m
 //        if(start){
 //          mark2=millis();
 //          found = true;
@@ -124,11 +126,11 @@ void three(){
 //  float onTime=mark2-mark1;
   
 //  oscilloscopeFrequency=1/onTime;
-  Serial.println(period);
-  Serial.println("oscfrequency is: ");
-  Serial.println(oscilloscopeFrequency);
-    Serial.println("frequency is: ");
-  Serial.println(freq);
+//  Serial.println(period);
+//  Serial.println("oscfrequency is: ");
+//  Serial.println(oscilloscopeFrequency);
+//    Serial.println("frequency is: ");
+//  Serial.println(freq);
   
 }
 
@@ -146,8 +148,8 @@ void five(){
   Serial.println("task5");
   int local_average=0;
   for(int i=0; i<4;i++){
-    Serial.println("task 5 Iteration: ");
-    Serial.println(i);
+//    Serial.println("task 5 Iteration: ");
+//    Serial.println(i);
     global_average=arrayValue[i];
   }
   
@@ -212,6 +214,7 @@ int tick=0;
 
 void burn(){
 Serial.println("burning time");
+    delay(1);
     tick++;
     
 }
@@ -229,11 +232,13 @@ Serial.println("burning time");
 //  nine
 //          };
 //        
+
+
 struct TASKTIMER{
   void (*task)();
   unsigned long period;
 } TaskTimers[]{
-  {one,5},
+  {one,115},
   {two,200},
   {three,1000},
   {four,41},
@@ -257,21 +262,23 @@ void loop() {
    unsigned long mark1;
     unsigned long mark2;
 
-   boolean testingVariable;
+   int testingVariable;
   //for(int slot=0; slot<SLOTX; slot++){
     int counter=1;
-    delay(1000);
+//    delay(1000);
+    currentTime= millis();
+//    one();
     for(auto &taskTimer: TaskTimers){
-      testingVariable=1;
-      Serial.println("testing");
-      Serial.println(counter);
       
-      while(testingVariable !=0){
+//      Serial.println("testing");
+//      Serial.println(counter);
+      
+      testingVariable=1; //need to reset as if it's a if statement
         
         
-        currentTime= millis();
-        testingVariable=(currentTime/taskTimer.period)%9;
-        Serial.println(testingVariable);
+        
+        testingVariable=(currentTime%taskTimer.period <9);
+//        Serial.println(testingVariable);
         if (testingVariable ==0){
           
        mark1= millis();
@@ -281,11 +288,12 @@ void loop() {
         float computeTime=mark2-mark1;
         Serial.println("task:");
         Serial.println(counter);
-        Serial.println(computeTime);
+//        Serial.println(computeTime);
         counter++;
-        }else{
-          burn();
         }
+      }
+      if (testingVariable>1){
+      burn();
       }
   
     }
@@ -310,4 +318,3 @@ void loop() {
 //        tick++;
 //    }
   
-}

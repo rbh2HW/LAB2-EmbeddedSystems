@@ -16,7 +16,7 @@
 #define analogPot 22 //GPIO22
 #define LEDerrorCode 25
 
-#define squareWave 19 //GPIO22
+#define squareWave 34 //GPIO22
 
 
 //typedef char specialfunc();
@@ -25,18 +25,18 @@
 
 void setup() {
   Serial.begin(9600);
-  
+
   // put your setup code here, to run once:
-  
+
   pinMode(SignalB, OUTPUT); //signalB from 21
   pinMode(LEDerrorCode, OUTPUT);
-  
+
   pinMode(pushButton1, INPUT); //disable stream pulse button
   pinMode(analogPot, INPUT); //mode selection button
   pinMode(squareWave, INPUT);
-  
-  
-  
+
+
+
 
 
 }
@@ -46,174 +46,182 @@ void setup() {
 
 
 //void (*ttable[SLOTX][CYCLEX])(void)={
-   //{task1,task2,task3,task4,task5},
-   //  {burn,burn,burn,burn,burn},
-  //  {burn,burn,burn,burn,burn}};
+//{task1,task2,task3,task4,task5},
+//  {burn,burn,burn,burn,burn},
+//  {burn,burn,burn,burn,burn}};
 
 //void one(void);
 //void two(void);
 //void three(void);
 //void four(void);
 //void five(void);
-void one(){
-Serial.println("task1");
-    digitalWrite(SignalB,HIGH);
-    delayMicroseconds(50);
-    digitalWrite(SignalB,LOW);
+void one() {
+  //Serial.println("task1");
+  digitalWrite(SignalB, HIGH);
+  delayMicroseconds(50);
+  digitalWrite(SignalB, LOW);
 }
 
-int digitalSwitchState=0;
-void two(){
-  
- Serial.println("task2");
-     digitalSwitchState=digitalRead(SignalB);
+int digitalSwitchState = 0;
+void two() {
 
-  
+  Serial.println("task2");
+  digitalSwitchState = digitalRead(SignalB);
+
+
 }
 
 int oscilloscopeFrequency;
-void three(){
-  Serial.println("task3");
-  boolean found=false;
+void three() {
+  //  Serial.println("task3");
+  boolean found = false;
   boolean start = false;
-  int squareReading=0;
-  long unsigned int mark1;
-  long unsigned int mark2;
- 
+  int squareReading = 0;
+  float mark1;
+  float mark2;
 
-   
-//  while(!squareReading){
-//    squareReading=digitalRead(squareWave);
-//  }
-//  mark1=millis();
-//  while(squareReading){
-//    squareReading=digitalRead(squareWave);
-//  }
-//  mark2=millis();
-//  while(!found){
-//    Serial.println("task3 Finding");
-//    
-//    squareReading=digitalRead(squareWave);
-//    
-//      if(squareReading=1) {
-//        if(!start){
-//        mark1=millis();
-//        start=true;
-//        }
-//        else{
-//        delay(40); // taken from the minimum of 2.5%
-//      }
-//      }else{
-//        if(start){
-//          mark2=millis();
-//          found = true;
-//        }
-//      }
-//      
-//     
-//  }
 
-   mark1 = pulseIn(squareWave,HIGH);
-   mark2 = pulseIn(squareWave,LOW);
-   float period = mark1+mark2; //is in microseconds
-   float freq=1e6/period; //dividing by 1e6 as this is 1micro in second as you need to scale it
-//   float freq=period;
-   
-   oscilloscopeFrequency = 1/period;
-   
-//  float onTime=mark2-mark1;
-  
-//  oscilloscopeFrequency=1/onTime;
-  Serial.println(period);
-  Serial.println("oscfrequency is: ");
-  Serial.println(oscilloscopeFrequency);
-    Serial.println("frequency is: ");
+
+  //  while(!squareReading){
+  //    squareReading=digitalRead(squareWave);
+  //  }
+  //  mark1=millis();
+  //  while(squareReading){
+  //    squareReading=digitalRead(squareWave);
+  //  }
+  //  mark2=millis();
+  //  while(!found){
+  //    Serial.println("task3 Finding");
+  //
+  //    squareReading=digitalRead(squareWave);
+  //
+  //      if(squareReading=1) {
+  //        if(!start){
+  //        mark1=millis();
+  //        start=true;
+  //        }
+  //        else{
+  //        delay(40); // taken from the minimum of 2.5%
+  //      }
+  //      }else{
+  //        if(start){
+  //          mark2=millis();
+  //          found = true;
+  //        }
+  //      }
+  //
+  //
+  //  }
+
+  mark1 = pulseIn(squareWave, HIGH);
+  mark2 = pulseIn(squareWave, LOW);
+  float period = mark1 + mark2; //is in microseconds
+  float freq = 1e6 / period; //dividing by 1e6 as this is 1micro in second as you need to scale it
+
+
+  //   float freq=period;
+
+  //   oscilloscopeFrequency = 1/period;
+
+  //  float onTime=mark2-mark1;
+
+  //  oscilloscopeFrequency=1/onTime;
+  //  Serial.println(period);
+  //  Serial.println("oscfrequency is: ");
+  //  Serial.println(oscilloscopeFrequency);
+  //    Serial.println("frequency is: ");
   Serial.println(freq);
-  
+
 }
 
-float arrayValue[]={0,0,0,0};
-void four(){
-  Serial.println("task4");
+int firstFour = 1;
+float arrayValue[] = {0, 0, 0, 0};
+void four() {
+  //  Serial.println("task4");
   float potValue;
-  potValue=analogRead(analogPot);
-  float arrayValueV2[]={0,0,0,0};
-//  arrayValueV2[2:4]=arrayValue[1:3];
-  }
+  potValue = analogRead(analogPot);
+  float arrayValueV2[] = {0, 0, 0, 0};
+  //  arrayValueV2[2:4]=arrayValue[1:3];
 
-int global_average=0;
-void five(){
-  Serial.println("task5");
-  int local_average=0;
-  for(int i=0; i<4;i++){
-    Serial.println("task 5 Iteration: ");
-    Serial.println(i);
-    global_average=arrayValue[i];
-  }
-  
-  local_average=local_average/4;
-  global_average=local_average;
+  if (firstFour < 4) //this adds index and number for the first 4 values obtained for the average
+    firstFour++;
+
+
 }
 
-void six(){
-  Serial.println("task6");
-  for(int i=0; i<1000; i++){
+int global_average = 0;
+void five() {
+  //  Serial.println("task5");
+  int local_average = 0;
+  for (int i = 0; i < firstFour; i++) {
+    //    Serial.println("task 5 Iteration: ");
+    //    Serial.println(i);
+    global_average = arrayValue[i];
+  }
+
+  local_average = local_average / firstFour;
+  global_average = local_average;
+}
+
+void six() {
+  //  Serial.println("task6");
+  for (int i = 0; i < 1000; i++) {
     __asm__ __volatile__ ("nop");
   }
 }
 
-int error_code=0;
+int error_code = 0;
 
-void seven(){
-  
-  Serial.println("task7");
-  if(global_average > (3.3/2)){
-    error_code=1;
-    }else{
-      error_code=0;
-    }
-    
+void seven() {
+
+  //  Serial.println("task7");
+  if (global_average > (3.3 / 2)) {
+    error_code = 1;
+  } else {
+    error_code = 0;
+  }
+
 }
-void eight(){
-  Serial.println("task8");
-  digitalWrite(LEDerrorCode,HIGH);
+void eight() {
+  //  Serial.println("task8");
+  digitalWrite(LEDerrorCode, HIGH);
 }
 
 char buffer[7];
 char dataStr[100] = "";
 
-void nine(){
+void nine() {
   //need to store:
   //state of the digital input (switch)
   //frequency value (Hz as integer)
   //filtered analog input (average reading)
-  
-  Serial.println("task9");
 
-    dataStr[0]=0;
-    
+  //  Serial.println("task9");
+
+  dataStr[0] = 0;
+
   dtostrf (digitalSwitchState, 5, 2, buffer);  //5 is minimum width, 1 is precision; float value is copied onto buff
- strcat( dataStr, buffer); //append the converted float
- strcat( dataStr, ", "); //append the delimiter
-//
-// dtostrf(oscilloscopeFrequency, 5, 2, buffer);  //5 is minimum width, 1 is precision; float value is copied onto buff
-// strcat( dataStr, buffer); //append the converted float
-// strcat( dataStr, ", "); //append the delimiter
-//
-// dtostrf(global_average, 5, 2, buffer);  //5 is minimum width, 1 is precision; float value is copied onto buff
-// strcat( dataStr, buffer); //append the converted float
-// strcat( dataStr, 0); //terminate correctly 
-// Serial.println(dataStr);
- 
-  
+  strcat( dataStr, buffer); //append the converted float
+  strcat( dataStr, ", "); //append the delimiter
+  //
+  // dtostrf(oscilloscopeFrequency, 5, 2, buffer);  //5 is minimum width, 1 is precision; float value is copied onto buff
+  // strcat( dataStr, buffer); //append the converted float
+  // strcat( dataStr, ", "); //append the delimiter
+  //
+  // dtostrf(global_average, 5, 2, buffer);  //5 is minimum width, 1 is precision; float value is copied onto buff
+  // strcat( dataStr, buffer); //append the converted float
+  // strcat( dataStr, 0); //terminate correctly
+  // Serial.println(dataStr);
+
+
 }
 
-int tick=0;
+int tick = 0;
 
-void burn(){
-Serial.println("burning time");
-    tick++;
-    
+void burn() {
+  Serial.println("burning time");
+  tick++;
+
 }
 
 //each task
@@ -228,74 +236,89 @@ Serial.println("burning time");
 //  eight,
 //  nine
 //          };
-//        
-struct TASKTIMER{
+//
+struct TASKTIMER {
   void (*task)();
   unsigned long period;
-} TaskTimers[]{
-  {one,5},
-  {two,200},
-  {three,1000},
-  {four,41},
-  {five,41},
-  {six,100},
-  {seven,333},
-  {eight,333},
-  {nine,5000}
+} TaskTimers[] {
+  {one, 5},
+  {two, 200},
+  {three, 1000},
+  {four, 41},
+  {five, 41},
+  {six, 100},
+  {seven, 333},
+  {eight, 333},
+  {nine, 5000}
 };
-                  
+
 //void (*mypointer[][])(void)(void)={
-  // {one,two,three,four,five},
-  //   {burn,burn,burn,burn,burn},
-  //  {burn,burn,burn,burn,burn}};
-  
+// {one,two,three,four,five},
+//   {burn,burn,burn,burn,burn},
+//  {burn,burn,burn,burn,burn}};
+
 
 
 void loop() {
   // put your main code here, to run repeatedly:
   unsigned long currentTime;
-   unsigned long mark1;
-    unsigned long mark2;
+  float mark1;
+  float mark2;
 
-   boolean testingVariable;
+  boolean testingVariable = false;
   //for(int slot=0; slot<SLOTX; slot++){
-    int counter=1;
-    delay(1000);
-    for(auto &taskTimer: TaskTimers){
-      testingVariable=1;
-      Serial.println("testing");
-      Serial.println(counter);
-      
-      while(testingVariable !=0){
-        
-        
-        currentTime= millis();
-        testingVariable=(currentTime/taskTimer.period)%9;
-        Serial.println(testingVariable);
-        if (testingVariable ==0){
-          
-       mark1= millis();
-        //(*mypointer[slot])();
-        taskTimer.task();
-        mark2 = millis();
-        float computeTime=mark2-mark1;
-        Serial.println("task:");
-        Serial.println(counter);
-        Serial.println(computeTime);
-        counter++;
-        }else{
-          burn();
-        }
-      }
-  
-    }
+  //    int counter=1;
 
 
-  
+  for (auto &taskTimer : TaskTimers) {
+
+
+
+
+    //        currentTime= millis();
+
+
+    //        if ((currentTime%taskTimer.period)<9){
+
+    //         three();
+
+    mark1 = millis();
+    //          (*mypointer[slot])();
+    two();
+    mark2 = millis();
+
+    Serial.println(mark2 - mark1);
+    //(*mypointer[slot])();
+    //        taskTimer.task();
+    //        Serial.println(testingVariable);
+
+
+    //       mark1= millis();
+    //(*mypointer[slot])();
+
+
+    //        taskTimer.task();
+    //        mark2 = millis();
+    //        float computeTime=mark2-mark1;
+    //        Serial.println("task:");
+    //        Serial.println(counter);
+    //        Serial.println(computeTime);
+    //        counter++;
+    //        }
+  }
+  //  if (!testingVariable) {
+  //    burn();
+  //  }
+
+
+}
+
+
+
 //  for(int slot=0; slot<SLOTX; slot++){
 //
 ////       if ( *mypointer[slot]()){
-////          
+////
 ////       }
 //         one();
 //         two();
@@ -306,8 +329,6 @@ void loop() {
 //         seven();
 //         eight();
 //         nine();
-//        
+//
 //        tick++;
 //    }
-  
-}
