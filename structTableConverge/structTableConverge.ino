@@ -13,7 +13,7 @@
 
 #define SignalB 21 //GPIO21
 #define pushButton1 23 //GPIO23
-#define analogPot 22 //GPIO22
+#define analogPot 35 //GPIO22
 #define LEDerrorCode 25
 
 #define squareWave 34 //GPIO22
@@ -21,6 +21,7 @@
 
 //typedef char specialfunc();
 //specialfunc *mypointer(double,int);
+
 
 
 void setup() {
@@ -130,7 +131,7 @@ void three() {
   //  Serial.println("oscfrequency is: ");
   //  Serial.println(oscilloscopeFrequency);
   //    Serial.println("frequency is: ");
-  Serial.println(freq);
+  //  Serial.println(freq);
 
 }
 
@@ -140,12 +141,28 @@ void four() {
   //  Serial.println("task4");
   float potValue;
   potValue = analogRead(analogPot);
-  float arrayValueV2[] = {0, 0, 0, 0};
+  Serial.println(potValue);
+  //  float arrayValueV2[] = {0, 0, 0, 0};
   //  arrayValueV2[2:4]=arrayValue[1:3];
 
-  if (firstFour < 4) //this adds index and number for the first 4 values obtained for the average
+  if (firstFour < 4) { //this adds index and number for the first 4 values obtained for the average
+    arrayValue[(firstFour - 1)] = potValue;
     firstFour++;
 
+  } else {
+    //with new array delete the last value from it and add the new value at index 1
+
+
+    arrayValue[3] = arrayValue[2];
+    arrayValue[2] = arrayValue[1];
+    arrayValue[1] = arrayValue[0];
+
+
+
+    arrayValue[0] = potValue;
+    //    arrayValue = arrayValueV2;
+    //    arrayValue[0:3]=arrayValueV2[0:3];
+  }
 
 }
 
@@ -204,14 +221,14 @@ void nine() {
   strcat( dataStr, buffer); //append the converted float
   strcat( dataStr, ", "); //append the delimiter
   //
-  // dtostrf(oscilloscopeFrequency, 5, 2, buffer);  //5 is minimum width, 1 is precision; float value is copied onto buff
-  // strcat( dataStr, buffer); //append the converted float
-  // strcat( dataStr, ", "); //append the delimiter
+  dtostrf(oscilloscopeFrequency, 5, 2, buffer);  //5 is minimum width, 1 is precision; float value is copied onto buff
+  strcat( dataStr, buffer); //append the converted float
+  strcat( dataStr, ", "); //append the delimiter
   //
-  // dtostrf(global_average, 5, 2, buffer);  //5 is minimum width, 1 is precision; float value is copied onto buff
-  // strcat( dataStr, buffer); //append the converted float
-  // strcat( dataStr, 0); //terminate correctly
-  // Serial.println(dataStr);
+  dtostrf(global_average, 5, 2, buffer);  //5 is minimum width, 1 is precision; float value is copied onto buff
+  strcat( dataStr, buffer); //append the converted float
+  strcat( dataStr, ", "); //terminate correctly
+  Serial.println(dataStr);
 
 
 }
@@ -278,57 +295,60 @@ void loop() {
     //        currentTime= millis();
 
 
-    //        if ((currentTime%taskTimer.period)<9){
-
-    //         three();
-
-    mark1 = millis();
-    //          (*mypointer[slot])();
-    two();
-    mark2 = millis();
-
-    Serial.println(mark2 - mark1);
-    //(*mypointer[slot])();
-    //        taskTimer.task();
-    //        Serial.println(testingVariable);
+    if ((currentTime % taskTimer.period) < 9) {
+      testingVariable=true;
 
 
-    //       mark1= millis();
-    //(*mypointer[slot])();
+      //         three();
+
+      //    mark1 = micros();
+      //          (*mypointer[slot])();
+      //    nine();
+      //    mark2 = micros();
+
+      //    Serial.println(mark2 - mark1);
+      //(*mypointer[slot])();
+      taskTimer.task();
+      //        Serial.println(testingVariable);
 
 
-    //        taskTimer.task();
-    //        mark2 = millis();
-    //        float computeTime=mark2-mark1;
-    //        Serial.println("task:");
-    //        Serial.println(counter);
-    //        Serial.println(computeTime);
-    //        counter++;
-    //        }
+      //       mark1= millis();
+      //(*mypointer[slot])();
+
+
+      //        taskTimer.task();
+      //        mark2 = millis();
+      //        float computeTime=mark2-mark1;
+      //        Serial.println("task:");
+      //        Serial.println(counter);
+      //        Serial.println(computeTime);
+      //        counter++;
+    }
   }
-  //  if (!testingVariable) {
-  //    burn();
-  //  }
+  if (!testingVariable) {
+    //    burn();
+    //  }
+    //
 
 
-}
+  }
 
 
 
-//  for(int slot=0; slot<SLOTX; slot++){
-//
-////       if ( *mypointer[slot]()){
-////
-////       }
-//         one();
-//         two();
-//         three();
-//         four();
-//         five();
-//         six();
-//         seven();
-//         eight();
-//         nine();
-//
-//        tick++;
-//    }
+  //  for(int slot=0; slot<SLOTX; slot++){
+  //
+  ////       if ( *mypointer[slot]()){
+  ////
+  ////       }
+  //         one();
+  //         two();
+  //         three();
+  //         four();
+  //         five();
+  //         six();
+  //         seven();
+  //         eight();
+  //         nine();
+  //
+  //        tick++;
+  //    }
