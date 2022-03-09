@@ -311,10 +311,10 @@ void loop() {
 
 
       //    one();
-      int ifstatementCondition=0;
-       ifstatementCondition=taskTimer.period+(0.5*taskTimer.period);
+//      int ifstatementCondition=0;
+//       ifstatementCondition=taskTimer.period+(0.5*taskTimer.period);
       //
-      if (((currentTime % ifstatementCondition) == 0.0) ) {
+      if (((currentTime % taskTimer.period) == 0) ) {
         testingVariable = true;
         //        mark1 = micros();
         //    seven();
@@ -350,10 +350,10 @@ void loop() {
       }
     }
 
-    if (!testingVariable) {
-      //      burn();
-      currentTime++;
-    }
+//    if (!testingVariable) {
+//      //      burn();
+//      currentTime++;
+//    }
   }
   //
   //  mark2 = micros();
